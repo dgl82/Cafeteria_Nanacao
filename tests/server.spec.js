@@ -17,12 +17,22 @@ describe("Operaciones CRUD de cafes", () => {
     .delete(`/cafes/${idNoExistente}`)
     .set("Authorization", jwt);
     expect(statusCode).toBe(404); //Comprobamos que devuelve error 404
-  }); */
+  });
   it("Test ruta POST /cafes, café agregado + código 201", async () => {
     const id = Math.floor(Math.random() * 999); //Generamos un id aleatorio
     const nuevoCafe = { id, nombre: "Café Expreso" }; //Creamos objeto con un café a mandar en el body
-    const { statusCode, body: cafeAgregado } = await request(server).post("/cafes").send(nuevoCafe); //Extraemos el statuscode y el objeto devuelto por la ruta de la peticion donde mandamos el cafe creado
+    const { statusCode, body: cafeAgregado } = await request(server) //Extraemos el statuscode y el objeto devuelto por la API en donde mandamos el cafe creado
+    .post("/cafes")
+    .send(nuevoCafe);
     expect(cafeAgregado).toContainEqual(nuevoCafe); //Comprobamos que el objeto agregado a la BD es el mismo que le mandamos en la solicitud
     expect(statusCode).toBe(201);
+  }); */
+  it("Test ruta PUT /cafes:id, error 400 enviando ID en parámetros diferente a ID en payload", async () => {
+    const idParams = Math.floor(Math.random() * 999); //Generamos un id aleatorio para params
+    const idCafe = Math.floor(Math.random() * 999); //Generamos un id aleatorio para el objeto
+    const nuevoCafe = { idCafe, nombre: "Café Largo" }; //Creamos objeto con un café a mandar en el body
+    //Extraemos el statuscode de la respuesta de la solicitud donde mandamos id diferente en params y el payload
+    const { statusCode } = await request(server).put(`/cafes/${idParams}`).send(nuevoCafe);
+    expect(statusCode).toBe(400);
   });
 });

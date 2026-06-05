@@ -10,4 +10,10 @@ describe("Operaciones CRUD de cafes", () => {
     expect(cafes).toBeInstanceOf(Object); //Comprobamos si los datos de cafes es un objeto
     expect(cafes.length).toBeGreaterThanOrEqual(1); //Comprobamos si el arreglo contiene 1 o más objetos
   });
+  it("Test ruta DELETE /cafes/:id", async () => {
+    const jwt = "token"; //Creamos un token porque lo necesita la ruta
+    const idNoExistente = Math.floor(Math.random() * 999); //Generamos un id aleatorio (difícil que exista en la BD)
+    const { statusCode } = await request(server).delete(`/cafes/${idNoExistente}`).set("Authorization", jwt);
+    expect(statusCode).toBe(404);
+  });
 });
